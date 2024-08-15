@@ -30,7 +30,6 @@ class ConfiguracionViewSet(viewsets.ModelViewSet):
 class OnOffLightsView(APIView):
     def post(self, request, *args, **kwargs):
         try:
-            # Obtener la instancia de Configuracion, asumiendo que solo hay una
             configuracion = Configuracion.objects.first()
 
             if not configuracion:
@@ -50,7 +49,7 @@ class OnOffLightsView(APIView):
             # Crear un registro
             registro = Registro(
                 dispositivo=dispositivo_luces,
-                accion= nuevo_estado,  # Accion es el contrario de luces en configuraciones
+                accion= nuevo_estado,  
                 tipodeact='manual'
             )
             registro.save()
@@ -64,7 +63,6 @@ class OnOffLightsView(APIView):
 class LightsStatusView(APIView):
     def get(self, request, *args, **kwargs):
         try:
-            # Obtener la instancia de Configuracion, asumiendo que solo hay una
             configuracion = Configuracion.objects.first()
 
             if not configuracion:
@@ -74,6 +72,37 @@ class LightsStatusView(APIView):
             estado_luces = 1 if configuracion.luces else 0
 
             return Response(estado_luces, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class tempsStatusView(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            estadotemp = configuracion.temperaturaact
+
+            return Response(estadotemp, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class tempsStatusPost(APIView):
+    def post(self, request, temperatura, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            configuracion.temperaturaact = float(temperatura)
+            configuracion.save()
+
+            return Response(f"Temperature updated to {temperatura}.", status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)

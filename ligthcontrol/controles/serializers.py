@@ -31,5 +31,5 @@ class ConfiguracionSerializer(serializers.ModelSerializer):
         model = Configuracion
         fields = [
             'id', 'luces', 'aire', 'lucesauto', 'aireauto', 
-            'tmmovON', 'tmmovOFF', 'tempminima', 'temppagar'
+            'tmmovON', 'tmmovOFF', 'tempminima', 'temppagar','urlcamara','temperaturaact'
         ]

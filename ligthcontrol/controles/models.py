@@ -40,6 +40,8 @@ class Configuracion(models.Model):
     tmmovOFF = models.IntegerField(help_text="Tiempo en segundos sin movimiento para apagar luces")
     tempminima = models.FloatField(help_text="Temperatura mínima para encender aire acondicionado")
     temppagar = models.FloatField(help_text="Temperatura máxima para apagar aire acondicionado")
+    urlcamara=models.CharField(max_length=100, default="")
+    temperaturaact=models.FloatField(help_text="Temperatura actual",default=0)
 
     def __str__(self):
         return "Configuración Actual"
