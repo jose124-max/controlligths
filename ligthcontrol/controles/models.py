@@ -42,6 +42,10 @@ class Configuracion(models.Model):
     temppagar = models.FloatField(help_text="Temperatura máxima para apagar aire acondicionado")
     urlcamara=models.CharField(max_length=100, default="")
     temperaturaact=models.FloatField(help_text="Temperatura actual",default=0)
+    codonair=models.CharField(max_length=100, default="",null=True)
+    codoffair=models.CharField(max_length=100, default="",null=True)
+    solcodon = models.BooleanField(default=False)
+    solcodoff = models.BooleanField(default=False)
 
     def __str__(self):
         return "Configuración Actual"

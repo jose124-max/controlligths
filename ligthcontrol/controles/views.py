@@ -106,3 +106,133 @@ class tempsStatusPost(APIView):
 
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class getCodOn(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            estadotemp = configuracion.codonair
+
+            return Response(estadotemp, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class postCodOn(APIView):
+    def post(self, request, codon, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            configuracion.codonair = codon
+            configuracion.solcodon=False
+            configuracion.save()
+
+            return Response(f"Temperature updated to {codon}.", status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class getCodOff(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            estadotemp = configuracion.codoffair
+
+            return Response(estadotemp, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class postCodOff(APIView):
+    def post(self, request, codoff, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            configuracion.codoffair = codoff
+            configuracion.solcodoff=False
+            configuracion.save()
+
+            return Response(f"Temperature updated to {codoff}.", status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class getSolOn(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            estadotemp = configuracion.solcodon
+
+            return Response(estadotemp, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class postSolOn(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            configuracion.solcodon = True
+            configuracion.save()
+
+            return Response(f"Solon updated to TRUE.", status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class getSolOff(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            estadotemp = configuracion.solcodoff
+
+            return Response(estadotemp, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class postSolOff(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            configuracion.solcodoff = True
+            configuracion.save()
+
+            return Response(f"Soloff updated to TRUE.", status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
