@@ -98,9 +98,32 @@ class tempsStatusPost(APIView):
 
             if not configuracion:
                 return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
-
-            configuracion.temperaturaact = float(temperatura)
+            tempactual =float(temperatura)
+            configuracion.temperaturaact = tempactual
             configuracion.save()
+            if (configuracion.aireauto):
+                dispositivo_aire = Dispositivo.objects.filter(tipo__nombre='Aire').first()
+                if(configuracion.aire and configuracion.tempminima > tempactual):
+                    configuracion.aire=False
+                    configuracion.save()#encender luces
+                    registro = Registro(
+                        dispositivo=dispositivo_aire,
+                        accion= False,
+                        tipodeact='automatica'
+                    )
+                    registro.save()
+                    print("Aire apagado automáticamente debido a detección de temperatura.")
+                if(not configuracion.aire and configuracion.tempminima <= tempactual):
+                    configuracion.aire=True
+                    configuracion.save()#encender luces
+                    registro = Registro(
+                        dispositivo=dispositivo_aire,
+                        accion= True,
+                        tipodeact='automatica'
+                    )
+                    registro.save()
+                    print("Aire encendido automáticamente debido a detección de temperatura.")
+
 
             return Response(f"Temperature updated to {temperatura}.", status=status.HTTP_200_OK)
 
@@ -236,3 +259,54 @@ class postSolOff(APIView):
 
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class AirStatusView(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response("No configuration found.", status=status.HTTP_404_NOT_FOUND)
+
+            # Obtener el estado de las luces
+            estado_air = 1 if configuracion.aire else 0
+
+            return Response(estado_air, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class OnOffAirView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            configuracion = Configuracion.objects.first()
+
+            if not configuracion:
+                return Response({"detail": "No configuration found."}, status=status.HTTP_404_NOT_FOUND)
+
+            # Cambiar el estado de 'luces'
+            nuevo_estado = not configuracion.aire
+            configuracion.aire = nuevo_estado
+            configuracion.save()
+
+            # Obtener el primer dispositivo de tipo "Luces"
+            dispositivo_air = Dispositivo.objects.filter(tipo__nombre='Aire').first()
+
+            if not dispositivo_air:
+                return Response({"detail": "No device of type 'Aire' found."}, status=status.HTTP_404_NOT_FOUND)
+
+            # Crear un registro
+            registro = Registro(
+                dispositivo=dispositivo_air,
+                accion= nuevo_estado,  
+                tipodeact='manual'
+            )
+            registro.save()
+
+            # Serializar la respuesta
+            serializer = ConfiguracionSerializer(configuracion)
+            return Response({"detail": "Status updated successfully.", "data": serializer.data}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

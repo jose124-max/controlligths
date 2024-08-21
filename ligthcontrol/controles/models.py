@@ -39,7 +39,6 @@ class Configuracion(models.Model):
     tmmovON = models.IntegerField(help_text="Tiempo en segundos para encender luces al detectar movimiento")
     tmmovOFF = models.IntegerField(help_text="Tiempo en segundos sin movimiento para apagar luces")
     tempminima = models.FloatField(help_text="Temperatura mínima para encender aire acondicionado")
-    temppagar = models.FloatField(help_text="Temperatura máxima para apagar aire acondicionado")
     urlcamara=models.CharField(max_length=100, default="")
     temperaturaact=models.FloatField(help_text="Temperatura actual",default=0)
     codonair=models.CharField(max_length=100, default="",null=True)

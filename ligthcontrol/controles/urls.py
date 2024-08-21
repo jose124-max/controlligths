@@ -11,7 +11,9 @@ router.register(r'configuraciones', ConfiguracionViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('onofflights/', OnOffLightsView.as_view(), name='onofflights'),
+    path('onoffAir/', OnOffAirView.as_view(), name='onOffAir'),
     path('lights-status/', LightsStatusView.as_view(), name='lights_status'),
+    path('air-status/', AirStatusView.as_view(), name='air_status'),
     path('temp-status/', tempsStatusView.as_view(), name='temps_status'),
     path('temp-statuspost/<str:temperatura>/', tempsStatusPost.as_view(), name='temps_statuspost'),
     path('codOn/', getCodOn.as_view(), name='codon'),
