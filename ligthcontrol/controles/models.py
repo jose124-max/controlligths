@@ -41,8 +41,8 @@ class Configuracion(models.Model):
     tempminima = models.FloatField(help_text="Temperatura mínima para encender aire acondicionado")
     urlcamara=models.CharField(max_length=100, default="")
     temperaturaact=models.FloatField(help_text="Temperatura actual",default=0)
-    codonair=models.CharField(max_length=100, default="",null=True)
-    codoffair=models.CharField(max_length=100, default="",null=True)
+    codonair=models.CharField(max_length=10000, default="",null=True)
+    codoffair=models.CharField(max_length=10000, default="",null=True)
     solcodon = models.BooleanField(default=False)
     solcodoff = models.BooleanField(default=False)
 
